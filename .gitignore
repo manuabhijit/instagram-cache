@@ -128,3 +128,6 @@ dist
 
 InstagramImages
 layers
+credentials.js
+
+*.zip

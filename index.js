@@ -1,28 +1,27 @@
-
 const { Instagram } = require("./utility/instagram");
-const { Environment } = require('./utility/environment');
-const { LocalDownloader } = require('./utility/localDownloader');
+const { Environment } = require("./utility/environment");
+const { LocalDownloader } = require("./utility/localDownloader");
 
+const handler = (...args) => {
+  const env = new Environment();
+  const profile = "nasa"
+  new Instagram(env.username, env.password).getPhotosByUsername(profile).then((images) => {
+    
+    const downloader = new LocalDownloader("instagram-cache");
 
+    for (const image of images) {
+      const imageUrl = image.display_url;
+      const hdLocation = `${env.storagePath}/${profile}/hdLocation/${image.id}.jpg`;
+      const thumbnailLocation = `${env.storagePath}/${profile}/thumbnail/${image.id}.jpg`;
 
-var download = function(uri, filename, callback){
-  request.head(uri, function(err, res, body){
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+      console.log({imageUrl, hdLocation})
+      downloader.saveToS3(image.display_url, hdLocation, () => {});
+      downloader.saveToS3(image.thumbnail_src, thumbnailLocation, () => {});
+    }
   });
 };
 
-console.log('Test', process.env.STORAGE_FOLDER);
+handler()
 
-new Instagram("nasa").getImages().then(images => {
-    const env = new Environment();
-    const downloader = new LocalDownloader();
+module.exports = { handler };
 
-    for (const image of images) {
-        const imageUrl = image.display_url;
-        const downloadLocation = `${env.storagePath}/hd_${image.id}.jpg`
-        downloader.download(image.display_url, downloadLocation, () => {});
-    }
-});
