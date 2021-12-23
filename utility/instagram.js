@@ -8,7 +8,7 @@ class Instagram {
 
   async getPhotosByUsername(username) {
     await this.__client.login();
-    const response = await this.__client.getPhotosByUsername({ username });
+    const response = await this.__client.getPhotosByUsername({ username, first: 50 });
     const edges = response.user.edge_owner_to_timeline_media.edges;
 
     const instagramImages = edges.map((node) => {

@@ -3,21 +3,10 @@ const request = require("request");
 
 var AWS = require("aws-sdk");
 
-class LocalDownloader {
+class S3Downloader {
   constructor(s3Bucket) {
     this.__s3 = new AWS.S3();
     this.__s3Bucket = s3Bucket
-  }
-
-  download(uri, filename) {
-    return new Promise((resolve, reject) => {
-      request.head(uri, function (err, res, body) {
-        console.log("content-type:", res.headers["content-type"]);
-        console.log("content-length:", res.headers["content-length"]);
-
-        request(uri).pipe(fs.createWriteStream(filename)).on("close", resolve);
-      });
-    });
   }
 
   saveToS3(url, filename) {
@@ -45,4 +34,4 @@ class LocalDownloader {
   }
 }
 
-module.exports = { LocalDownloader };
+module.exports = { S3Downloader };
