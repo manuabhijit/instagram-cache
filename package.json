@@ -4,7 +4,9 @@
   "description": "Cache Instagram Images to Local System",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "Npm run setup",
+    "run": "node index.js",
+    "monitor": "nodemon index.js"
   },
   "repository": {
     "type": "git",
